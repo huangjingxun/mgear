@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+                      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.hjx.mgear">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <task:annotation-driven/>
+    <!-- <task:scheduler id="scheduler" pool-size="10"/> -->
+    <!-- <task:scheduler id="emailScheduler" pool-size="1"/> -->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 加载配置文件 -->
+    <!-- <bean id="propertyConfigurer " class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+    <bean id="propertyConfigurer " class="com.hjx.mgear.common.framework.spring.CustomizedPropertyConfigurer">
+        <property name="ignoreResourceNotFound" value="true"></property>
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>file:./jdbc.properties</value><!-- 优先外部配置文件 -->
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${datasource.driverClassName}"></property>
+        <property name="jdbcUrl" value="${datasource.url}"></property>
+        <property name="user" value="${datasource.username}"></property>
+        <property name="password" value="${datasource.password}"></property>
+
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}"></property>
+        <property name="initialPoolSize" value="${c3p0.initialPoolSize}"></property>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"></property>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"></property>
+        <property name="maxIdleTime" value="${c3p0.maxIdleTime}"></property>
+        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"></property>
+        <property name="maxStatements" value="${c3p0.maxStatements}"></property>
+        <property name="numHelperThreads" value="${c3p0.numHelperThreads}"></property>
+    </bean>
+
+    <!-- 使用spring的会话管理 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="mybatis-config.xml"/>
+<!--         <property name="mapperLocations" value="classpath:mybatis/mapping/**/*.xml"></property> -->
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hjx.mgear.**.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- 使用spring的事务管理 -->
+    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!-- freemarker config -->
+    <bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPaths">
+            <list>
+                <!-- <value>classpath:template/feed/amazon</value> -->
+                <!-- <value>classpath:template/email/ebay</value> -->
+            </list>
+        </property>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 设置默认数字显示格式，不要自动加逗号 -->
+                <prop key="number_format">#</prop>
+                <!-- <prop key="locale">zh_CN</prop> -->
+            </props>
+        </property>
+    </bean>
+    <!-- 配置当出现Exception、RuntimeException、Exception时采用对应的事务操作 -->
+    <!-- <tx:advice id="txAdvice" transaction-manager="transactionManager"> -->
+    <!-- <tx:attributes> -->
+    <!-- <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" -->
+    <!-- no-rollback-for="java.lang.RuntimeException" /> -->
+    <!-- <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" /> -->
+    <!-- <tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException" /> -->
+    <!-- <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" /> -->
+    <!-- <tx:method name="find*" propagation="SUPPORTS" /> -->
+    <!-- <tx:method name="get*" propagation="SUPPORTS" /> -->
+    <!-- <tx:method name="select*" propagation="SUPPORTS" /> -->
+    <!-- </tx:attributes> -->
+    <!-- </tx:advice> -->
+
+    <!-- <aop:config> -->
+    <!-- <aop:pointcut id="transactionMethods" expression="execution(* com.hjx.mgear..service.impl..*ServiceImpl.*(..))" /> -->
+    <!-- <aop:advisor advice-ref="txAdvice" pointcut-ref="transactionMethods" order="2" /> -->
+    <!-- </aop:config> -->
+
+    <bean id="exceptionLogAdvice" class="com.hjx.mgear.common.framework.spring.ExceptionLogAdvice"/>
+    <aop:config>
+        <aop:aspect ref="exceptionLogAdvice" order="1">
+            <aop:pointcut id="allThread" expression="execution(* com.hjx.mgear.app..thread..*(..))"/>
+            <aop:after-throwing pointcut-ref="allThread" throwing="ex" method="afterThrowing"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
