@@ -140,7 +140,7 @@ public abstract class AbstractHttpService {
         String httpBodyString = null;
         do {
             if (retryCount > 0) {
-                LOGGER.info("重试[{}]", retryCount);
+                LOGGER.info("重试: {}", retryCount);
             }
             try {
                 httpBodyString = getHttpData(url, paramList);
@@ -150,8 +150,10 @@ public abstract class AbstractHttpService {
             retryCount++;
         } while (null == httpBodyString && retryCount < retry);
 
+        if (retryCount > 1 && httpBodyString != null) {
+            LOGGER.info("重试成功.");
+        }
         return httpBodyString;
-
     }
 
     private String getHttpData(String url, List<NameValuePair> paramList) throws URISyntaxException {

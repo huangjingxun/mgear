@@ -15,10 +15,9 @@ public class FCMProduct {
     private String       priceStr;
     private String       url;
     private String       ppath;
-    private String       webRoot;
-    private List<String> imageList = new ArrayList<>();
+    private FCMImage     image;
 
-    private List<FCMSku> skuList   = new ArrayList<>();
+    private List<FCMSku> skuList = new ArrayList<>();
 
     public FCMProduct() {
         super();
@@ -43,9 +42,9 @@ public class FCMProduct {
         this.ppath = ppath;
     }
 
-    public List<String> getImageList() {
+    public FCMImage getImage() {
 
-        return imageList;
+        return image;
     }
 
     public String getPid() {
@@ -83,14 +82,9 @@ public class FCMProduct {
         return url;
     }
 
-    public String getWebRoot() {
+    public void setImage(FCMImage image) {
 
-        return webRoot;
-    }
-
-    public void setImageList(List<String> imageList) {
-
-        this.imageList = imageList;
+        this.image = image;
     }
 
     public void setPid(String pid) {
@@ -128,11 +122,6 @@ public class FCMProduct {
         this.url = url;
     }
 
-    public void setWebRoot(String webRoot) {
-
-        this.webRoot = webRoot;
-    }
-
     @Override
     public String toString() {
 
@@ -149,10 +138,8 @@ public class FCMProduct {
         builder.append(url);
         builder.append(", ppath=");
         builder.append(ppath);
-        builder.append(", webRoot=");
-        builder.append(webRoot);
-        builder.append(", imageList=");
-        builder.append(imageList);
+        builder.append(", image=");
+        builder.append(image);
         builder.append(", skuList=");
         builder.append(skuList);
         builder.append("]");

@@ -65,8 +65,14 @@ public class Config extends AbstractConfig {
     public static final String                   LOCAL_HOST                      = CONF.getString("LOCAL_HOST", "localhost");
     public static final int                      PORT                            = CONF.getInt("PORT");
 
-    public static final String                   FCMOTO_URL                      = CONF.getString("FCMOTO_URL");
+    public static final String                   OUTPUT_DIR                      = CONF.getString("OUTPUT_DIR");
 
+    public static final String                   IMAGE_CAPTURE_DIR               = CONF.getString("IMAGE_CAPTURE_DIR");
+    public static final String                   IMAGE_WATERMARK_DIR             = CONF.getString("IMAGE_WATERMARK_DIR");
+    public static final String                   IMAGE_WATER_MARK_TEXT           = CONF.getString("IMAGE_WATER_MARK_TEXT");
+    public static final String                   IMAGE_FCMOTO_DIR                = CONF.getString("IMAGE_FCMOTO_DIR");
+
+    public static final String                   FCMOTO_URL                      = CONF.getString("FCMOTO_URL");
     public static final List<NamedUrl>           FCMOTO_URL_PRODUCTS             = Arrays.stream(CONF.getStringArray("FCMOTO_URL_PRODUCTS"))
                                                                                          .map(str -> StringUtils.split(str, '|'))
                                                                                          .map(strArray -> new NamedUrl(strArray[0], strArray[1]))
@@ -83,8 +89,6 @@ public class Config extends AbstractConfig {
     public static final String                   FCMOTO_XPATH_PID                = CONF.getString("FCMOTO_XPATH_PID");
     public static final String                   FCMOTO_XPATH_SUBPRODUCT         = CONF.getString("FCMOTO_XPATH_SUBPRODUCT");
     public static final String                   FCMOTO_XPATH_ATTRIBUTE_ELEMENTS = CONF.getString("FCMOTO_XPATH_ATTRIBUTE_ELEMENTS");
-    public static final String                   FCMOTO_ATTRIBUTE_ID_COLOR       = CONF.getString("FCMOTO_ATTRIBUTE_ID_COLOR");
-    public static final String                   FCMOTO_ATTRIBUTE_ID_SIZE        = CONF.getString("FCMOTO_ATTRIBUTE_ID_SIZE");
 
     public Config() {
         super();
