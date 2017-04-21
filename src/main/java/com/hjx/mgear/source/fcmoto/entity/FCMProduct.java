@@ -9,12 +9,16 @@ import java.util.List;
  * @since 2017年4月11日
  */
 public class FCMProduct {
-    private String       pid;
-    private String       productName;
-    private BigDecimal   price;
-    private String       priceStr;
-    private String       url;
-    private String       ppath;
+    private String     pid;
+    private String     productName;
+    private BigDecimal price;
+    private String     priceStr;
+    private String     url;
+    private String     ppath;
+    private String     detailCN;
+    private String     detailUS;
+
+
     private FCMImage     image;
 
     private List<FCMSku> skuList = new ArrayList<>();
@@ -23,23 +27,14 @@ public class FCMProduct {
         super();
     }
 
-    public FCMProduct(String pid, String productName, BigDecimal price, String priceStr, String url) {
-        super();
-        this.pid = pid;
-        this.productName = productName;
-        this.price = price;
-        this.priceStr = priceStr;
-        this.url = url;
+    public String getDetailCN() {
+    
+        return detailCN;
     }
 
-    public FCMProduct(String pid, String productName, BigDecimal price, String priceStr, String url, String ppath) {
-        super();
-        this.pid = pid;
-        this.productName = productName;
-        this.price = price;
-        this.priceStr = priceStr;
-        this.url = url;
-        this.ppath = ppath;
+    public String getDetailUS() {
+    
+        return detailUS;
     }
 
     public FCMImage getImage() {
@@ -80,6 +75,16 @@ public class FCMProduct {
     public String getUrl() {
 
         return url;
+    }
+
+    public void setDetailCN(String detailCN) {
+    
+        this.detailCN = detailCN;
+    }
+
+    public void setDetailUS(String detailUS) {
+    
+        this.detailUS = detailUS;
     }
 
     public void setImage(FCMImage image) {
@@ -138,6 +143,10 @@ public class FCMProduct {
         builder.append(url);
         builder.append(", ppath=");
         builder.append(ppath);
+        builder.append(", detailCN=");
+        builder.append(detailCN);
+        builder.append(", detailUS=");
+        builder.append(detailUS);
         builder.append(", image=");
         builder.append(image);
         builder.append(", skuList=");

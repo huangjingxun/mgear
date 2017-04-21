@@ -81,10 +81,8 @@ public class FCMService extends AbstractHttpService {
 
                 /* 获取HTML */
                 String htmlData = getHttpDataWithRetry(url, 3);
-                System.out.println(MessageFormat.format("{0}:\n{1}", name, htmlData));
-
-                /* 解析html */
                 Document document = Jsoup.parse(htmlData);
+                
                 maxPage = fetchMaxPageSize(document);
 
                 List<FCMProduct> productList = fetchProductBrief(document);
@@ -97,6 +95,7 @@ public class FCMService extends AbstractHttpService {
 
             /* 填充product */
             for (FCMProduct product : productMap.values()) {
+                fetchProductDetail(product);
                 fetchProductSKU(product.getPpath(), product);
                 FCMImage image = fetchProductImage(product.getPid());
                 product.setImage(image);
@@ -106,6 +105,17 @@ public class FCMService extends AbstractHttpService {
             }
             break;
         }
+    }
+
+    private void fetchProductDetail(FCMProduct product) {
+
+        /* 获取HTML */
+        String htmlData = getHttpDataWithRetry(product.getUrl(), 3);
+        Document document = Jsoup.parse(htmlData);
+        
+        //TODO List<String> pageList = Xsoup.compile(Config.FCMOTO_XPATH_PRODUCT_DETAIL_CN).evaluate(document).list();
+
+
     }
 
     private void output(String categoryName, FCMProduct product) {
