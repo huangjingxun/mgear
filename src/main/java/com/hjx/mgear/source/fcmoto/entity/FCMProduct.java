@@ -9,18 +9,15 @@ import java.util.List;
  * @since 2017年4月11日
  */
 public class FCMProduct {
-    private String     pid;
-    private String     productName;
-    private BigDecimal price;
-    private String     priceStr;
-    private String     url;
-    private String     ppath;
-    private String     detailCN;
-    private String     detailUS;
-
-
+    private String       pid;
+    private String       productName;
+    private BigDecimal   price;
+    private String       priceStr;
+    private String       url;
+    private String       ppath;
+    private String       detailCN;
+    private String       detailEN;
     private FCMImage     image;
-
     private List<FCMSku> skuList = new ArrayList<>();
 
     public FCMProduct() {
@@ -28,13 +25,13 @@ public class FCMProduct {
     }
 
     public String getDetailCN() {
-    
+
         return detailCN;
     }
 
-    public String getDetailUS() {
-    
-        return detailUS;
+    public String getDetailEN() {
+
+        return detailEN;
     }
 
     public FCMImage getImage() {
@@ -78,13 +75,13 @@ public class FCMProduct {
     }
 
     public void setDetailCN(String detailCN) {
-    
+
         this.detailCN = detailCN;
     }
 
-    public void setDetailUS(String detailUS) {
-    
-        this.detailUS = detailUS;
+    public void setDetailEN(String detailEN) {
+
+        this.detailEN = detailEN;
     }
 
     public void setImage(FCMImage image) {
@@ -145,8 +142,8 @@ public class FCMProduct {
         builder.append(ppath);
         builder.append(", detailCN=");
         builder.append(detailCN);
-        builder.append(", detailUS=");
-        builder.append(detailUS);
+        builder.append(", detailEN=");
+        builder.append(detailEN);
         builder.append(", image=");
         builder.append(image);
         builder.append(", skuList=");

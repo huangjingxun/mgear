@@ -61,7 +61,7 @@ public class FCMService extends AbstractHttpService {
 
     public FCMService() {
         super();
-        addCookie("IC_TargetCurrency", "EUR", "www.fc-moto.de");
+        // addCookie("IC_TargetCurrency", "EUR", "www.fc-moto.de");
     }
 
     public void execute() {
@@ -82,14 +82,14 @@ public class FCMService extends AbstractHttpService {
                 /* 获取HTML */
                 String htmlData = getHttpDataWithRetry(url, 3);
                 Document document = Jsoup.parse(htmlData);
-                
+
                 maxPage = fetchMaxPageSize(document);
 
                 List<FCMProduct> productList = fetchProductBrief(document);
                 for (FCMProduct product : productList) {
                     productMap.put(product.getPpath(), product);
                 }
-                LOGGER.info("Got page: {}/{}", page, maxPage);
+                LOGGER.info("Got page: [{}] {}/{}", name, page, maxPage);
                 break;
             }
 
@@ -110,12 +110,17 @@ public class FCMService extends AbstractHttpService {
     private void fetchProductDetail(FCMProduct product) {
 
         /* 获取HTML */
-        String htmlData = getHttpDataWithRetry(product.getUrl(), 3);
+        String url = MessageFormat.format(Config.FCMOTO_URL_PRODUCT_DETAIL_CN, product.getPpath());
+        String htmlData = getHttpDataWithRetry(url, 3);
         Document document = Jsoup.parse(htmlData);
-        
-        //TODO List<String> pageList = Xsoup.compile(Config.FCMOTO_XPATH_PRODUCT_DETAIL_CN).evaluate(document).list();
+        String detailCN = Xsoup.compile(Config.FCMOTO_XPATH_PRODUCT_DETAIL).evaluate(document).get();
+        product.setDetailCN(detailCN);
 
-
+        url = MessageFormat.format(Config.FCMOTO_URL_PRODUCT_DETAIL_EN, product.getPpath());
+        htmlData = getHttpDataWithRetry(url, 3);
+        document = Jsoup.parse(htmlData);
+        String detailEN = Xsoup.compile(Config.FCMOTO_XPATH_PRODUCT_DETAIL).evaluate(document).get();
+        product.setDetailEN(detailEN);
     }
 
     private void output(String categoryName, FCMProduct product) {
@@ -135,7 +140,7 @@ public class FCMService extends AbstractHttpService {
 
         /* SKU */
         dataList.add("SKU: ");
-        dataList.add("stock\tskuName");
+        dataList.add("pid\tstock\tskuName");
 
         List<FCMSku> skuList = product.getSkuList();
         Collections.sort(skuList);
@@ -147,8 +152,13 @@ public class FCMService extends AbstractHttpService {
             String skuPath = productPath + "/" + skuName;
             File skuImageDir = new File(skuPath + "/Image");
             copyImageToDir(sku.getImage(), skuImageDir);
-            dataList.add(MessageFormat.format("{0}\t{1}", sku.getStock(), skuName));
+            dataList.add(MessageFormat.format("{0}\t{1}\t{2}", sku.getSkuId(), sku.getStock(), skuName));
         }
+        dataList.add("DetailEN: ");
+        dataList.add(product.getDetailEN());
+        dataList.add("DetailCN: ");
+        dataList.add(product.getDetailCN());
+        
         try {
             FileUtils.touch(outputFile);
             FileUtils.writeLines(outputFile, dataList);
@@ -196,7 +206,7 @@ public class FCMService extends AbstractHttpService {
                 /* Parent product URL */
                 String ppath = StringUtils.substringBefore(element.attr("ppath"), "/SubProducts/");
                 product.setPpath(ppath);
-                product.setUrl(MessageFormat.format(Config.FCMOTO_URL_PRODUCT_DETAIL, ppath));
+                product.setUrl(MessageFormat.format(Config.FCMOTO_URL_PRODUCT_DETAIL_CN, ppath));
 
                 /* Add */
                 productBriefList.add(product);

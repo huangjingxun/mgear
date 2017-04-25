@@ -80,7 +80,8 @@ public class Config extends AbstractConfig {
     public static final String                   FCMOTO_XPATH_PAGE               = CONF.getString("FCMOTO_XPATH_PAGE");
     public static final String                   FCMOTO_XPATH_PRODUCTS           = CONF.getString("FCMOTO_XPATH_PRODUCTS");
 
-    public static final String                   FCMOTO_URL_PRODUCT_DETAIL       = CONF.getString("FCMOTO_URL_PRODUCT_DETAIL");
+    public static final String                   FCMOTO_URL_PRODUCT_DETAIL_EN    = CONF.getString("FCMOTO_URL_PRODUCT_DETAIL_EN");
+    public static final String                   FCMOTO_URL_PRODUCT_DETAIL_CN    = CONF.getString("FCMOTO_URL_PRODUCT_DETAIL_CN");
     public static final String                   FCMOTO_XPATH_PRODUCT_DETAIL     = CONF.getString("FCMOTO_XPATH_PRODUCT_DETAIL");
 
     public static final String                   FCMOTO_URL_IMAGE                = CONF.getString("FCMOTO_URL_IMAGE");

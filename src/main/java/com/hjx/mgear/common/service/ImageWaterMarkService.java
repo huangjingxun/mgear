@@ -42,6 +42,6 @@ public class ImageWaterMarkService {
                                        File outputImageFile,
                                        String text) {
 
-        ImageUtils.createWaterMarkByText(srcImgFile, outputImageFile, text, "宋体", Color.WHITE, Color.YELLOW, 90, "JPG", 0, 0.3f);
+        ImageUtils.createWaterMarkByText(srcImgFile, outputImageFile, text, "宋体", Color.WHITE, Color.YELLOW, 40, "JPG", 0, 0.3f);
     }
 }

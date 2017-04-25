@@ -72,6 +72,7 @@ public abstract class AbstractHttpService {
         HTTP_CLIENT = HttpClients.custom()
                                  .setDefaultCookieStore(COOKIE_STORE)
                                  .setDefaultRequestConfig(requestConfig)
+                                 .disableCookieManagement()
                                  .build();
 
     }
