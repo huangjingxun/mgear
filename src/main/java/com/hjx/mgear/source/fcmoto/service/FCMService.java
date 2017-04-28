@@ -35,8 +35,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjx.mgear.common.event.CaptureImageEvent;
+import com.hjx.mgear.common.service.CaptureImageService;
+import com.hjx.mgear.common.service.ImageWaterMarkService;
 import com.hjx.mgear.config.Config;
-import com.hjx.mgear.config.Config.NamedUrl;
+import com.hjx.mgear.config.Config.ProductUrl;
 import com.hjx.mgear.source.fcmoto.entity.FCMImage;
 import com.hjx.mgear.source.fcmoto.entity.FCMProduct;
 import com.hjx.mgear.source.fcmoto.entity.FCMSku;
@@ -57,6 +59,10 @@ public class FCMService extends AbstractHttpService {
     private final static ScriptEngine        SCRIPT_ENGINE         = SCRIPT_ENGINE_MANAGER.getEngineByName("nashorn");
 
     @Autowired
+    private CaptureImageService              captureImageService;
+    @Autowired
+    private ImageWaterMarkService            imageWaterMarkService;
+    @Autowired
     private ApplicationContext               applicationContext;
 
     public FCMService() {
@@ -66,18 +72,16 @@ public class FCMService extends AbstractHttpService {
 
     public void execute() {
 
-        for (NamedUrl namedUrl : Config.FCMOTO_URL_PRODUCTS) {
-            String categoryName = namedUrl.getName();
-            LOGGER.info("category: {}", categoryName);
+        /* 防止重复的product */
+        LinkedHashMap<String, FCMProduct> productMap = new LinkedHashMap<>();
 
-            /* 防止重复的product */
-            LinkedHashMap<String, FCMProduct> productMap = new LinkedHashMap<>();
+        for (ProductUrl productUrl : Config.FCMOTO_URL_PRODUCTS) {
 
             /* 分页读取productList */
             for (int page = 1, maxPage = 1; page <= maxPage; page++) {
 
-                String name = namedUrl.getName();
-                String url = namedUrl.getUrl(1);
+                String name = productUrl.getCategory();
+                String url = productUrl.getUrl(page);
 
                 /* 获取HTML */
                 String htmlData = getHttpDataWithRetry(url, 3);
@@ -87,23 +91,29 @@ public class FCMService extends AbstractHttpService {
 
                 List<FCMProduct> productList = fetchProductBrief(document);
                 for (FCMProduct product : productList) {
+                    product.setBrand(productUrl.getBrand());
+                    product.setCategory(productUrl.getCategory());
                     productMap.put(product.getPpath(), product);
                 }
-                LOGGER.info("Got page: [{}] {}/{}", name, page, maxPage);
+                LOGGER.info("Got page: [{}] {}/{}", productUrl.getCategory(), page, maxPage);
                 break;
             }
 
-            /* 填充product */
-            for (FCMProduct product : productMap.values()) {
-                fetchProductDetail(product);
-                fetchProductSKU(product.getPpath(), product);
-                FCMImage image = fetchProductImage(product.getPid());
-                product.setImage(image);
-
-                /* 输出数据 */
-                output(categoryName, product);
-            }
             break;
+        }
+
+        /* 填充product */
+        for (FCMProduct product : productMap.values()) {
+            fetchProductDetail(product);
+            fetchProductSKU(product.getPpath(), product);
+            FCMImage image = fetchProductImage(product.getPid());
+            product.setImage(image);
+
+            /* 抓取图片文件 */
+            buildImageUrl(image).stream().forEach(this::fetchImageFile);
+
+            /* 输出数据 */
+            output(product);
         }
     }
 
@@ -123,7 +133,7 @@ public class FCMService extends AbstractHttpService {
         product.setDetailEN(detailEN);
     }
 
-    private void output(String categoryName, FCMProduct product) {
+    private void output(FCMProduct product) {
 
         LOGGER.info("Output start: ");
         List<String> dataList = new ArrayList<>();
@@ -132,15 +142,16 @@ public class FCMService extends AbstractHttpService {
         dataList.add("url: " + product.getUrl());
         dataList.add("pid: " + product.getPid());
         dataList.add("priceStr: " + product.getPriceStr());
-        dataList.add("priceRMB: " + product.getPrice().toString());
-        String productPath = Config.OUTPUT_DIR + "/" + Config.IMAGE_FCMOTO_DIR + "/" + categoryName + "/" + product.getProductName();
+        dataList.add("priceRMB: " + Config.EUR_TO_CNY.multiply(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+        String productPath = Config.OUTPUT_DIR + "/" + Config.IMAGE_FCMOTO_DIR + "/" + product.getBrand() + "/" + product.getCategory() + "/" + product.getProductName();
         File outputFile = new File(productPath + "/" + "listing.txt");
         File productImageDir = new File(productPath + "/Image");
-        copyImageToDir(product.getImage(), productImageDir);
+        copyImageToDir(product.getImage(), productImageDir, false);
 
         /* SKU */
+        dataList.add("");
         dataList.add("SKU: ");
-        dataList.add("pid\tstock\tskuName");
+        dataList.add("pid\t\tstock\tskuName");
 
         List<FCMSku> skuList = product.getSkuList();
         Collections.sort(skuList);
@@ -149,16 +160,16 @@ public class FCMService extends AbstractHttpService {
             if (StringUtils.isEmpty(skuName)) {
                 skuName = sku.getSkuId();
             }
-            String skuPath = productPath + "/" + skuName;
-            File skuImageDir = new File(skuPath + "/Image");
-            copyImageToDir(sku.getImage(), skuImageDir);
+            File skuImageDir = new File( productPath + "/" + skuName.split("_")[0]);
+            copyImageToDir(sku.getImage(), skuImageDir, false);
             dataList.add(MessageFormat.format("{0}\t{1}\t{2}", sku.getSkuId(), sku.getStock(), skuName));
         }
+        dataList.add("");
         dataList.add("DetailEN: ");
         dataList.add(product.getDetailEN());
         dataList.add("DetailCN: ");
         dataList.add(product.getDetailCN());
-        
+
         try {
             FileUtils.touch(outputFile);
             FileUtils.writeLines(outputFile, dataList);
@@ -167,12 +178,12 @@ public class FCMService extends AbstractHttpService {
         }
     }
 
-    private void copyImageToDir(FCMImage image, File dir) {
+    private void copyImageToDir(FCMImage image, File dir, boolean overwrite) {
 
         for (int i = 0; i < image.getImageList().size(); i++) {
             String imageName = image.getImageList().get(i);
             File srcFile = getImageFile(image.getWebRoot(), imageName);
-            ImageUtils.copyFileToDirectory(srcFile, dir, String.valueOf(i));
+            ImageUtils.copyFileToDirectory(srcFile, dir, String.valueOf(i), overwrite);
         }
     }
 
@@ -334,8 +345,6 @@ public class FCMService extends AbstractHttpService {
             }
         }
 
-        /* 抓取图片文件 */
-        buildImageUrl(fcmImage).stream().forEach(this::fetchImageFileAsync);
         return fcmImage;
     }
 
@@ -368,5 +377,15 @@ public class FCMService extends AbstractHttpService {
     private void fetchImageFileAsync(String imageUrl) {
 
         applicationContext.publishEvent(new CaptureImageEvent(this, imageUrl, Config.IMAGE_FCMOTO_DIR));
+    }
+
+    private void fetchImageFile(String imageUrl) {
+
+        try {
+            File imageFile = captureImageService.saveImageFile(imageUrl, Config.IMAGE_FCMOTO_DIR);
+            imageWaterMarkService.createWaterMark(imageFile, imageUrl, Config.IMAGE_FCMOTO_DIR, Config.IMAGE_WATER_MARK_TEXT);
+        } catch (Exception e) {
+            LOGGER.warn("fetchImage 失败", e);
+        }
     }
 }

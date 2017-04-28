@@ -17,11 +17,23 @@ public class FCMProduct {
     private String       ppath;
     private String       detailCN;
     private String       detailEN;
+    private String       brand;
+    private String       category;
     private FCMImage     image;
     private List<FCMSku> skuList = new ArrayList<>();
 
     public FCMProduct() {
         super();
+    }
+
+    public String getBrand() {
+
+        return brand;
+    }
+
+    public String getCategory() {
+
+        return category;
     }
 
     public String getDetailCN() {
@@ -72,6 +84,16 @@ public class FCMProduct {
     public String getUrl() {
 
         return url;
+    }
+
+    public void setBrand(String brand) {
+
+        this.brand = brand;
+    }
+
+    public void setCategory(String category) {
+
+        this.category = category;
     }
 
     public void setDetailCN(String detailCN) {
@@ -144,6 +166,10 @@ public class FCMProduct {
         builder.append(detailCN);
         builder.append(", detailEN=");
         builder.append(detailEN);
+        builder.append(", brand=");
+        builder.append(brand);
+        builder.append(", category=");
+        builder.append(category);
         builder.append(", image=");
         builder.append(image);
         builder.append(", skuList=");

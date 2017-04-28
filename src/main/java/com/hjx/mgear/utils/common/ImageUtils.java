@@ -129,13 +129,15 @@ public class ImageUtils {
         throw new RuntimeException(errorMsg);
     }
 
-    public static boolean copyFileToDirectory(File srcFile, File dir, String newName) {
+    public static boolean copyFileToDirectory(File srcFile, File dir, String newName, boolean overwrite) {
 
         try {
             String ext = FilenameUtils.getExtension(srcFile.getName());
             File newFile = FileUtils.getFile(dir, newName + "." + ext);
-            FileUtils.touch(newFile);
-            FileUtils.copyFile(srcFile, newFile);
+            if (!newFile.exists() || overwrite) {
+                FileUtils.touch(newFile);
+                FileUtils.copyFile(srcFile, newFile);
+            }
             return true;
         } catch (IOException e) {
             LOGGER.warn("Copy image failed: {}", srcFile, e);
