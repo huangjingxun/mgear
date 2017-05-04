@@ -1,4 +1,4 @@
-package com.hjx.mgear.source.fcmoto.entity;
+package com.hjx.mgear.platform.fcmoto.dto;
 
 import java.util.ArrayList;
 import java.util.List;

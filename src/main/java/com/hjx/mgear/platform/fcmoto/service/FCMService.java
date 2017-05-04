@@ -1,4 +1,4 @@
-package com.hjx.mgear.source.fcmoto.service;
+package com.hjx.mgear.platform.fcmoto.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +39,9 @@ import com.hjx.mgear.common.service.CaptureImageService;
 import com.hjx.mgear.common.service.ImageWaterMarkService;
 import com.hjx.mgear.config.Config;
 import com.hjx.mgear.config.Config.ProductUrl;
-import com.hjx.mgear.source.fcmoto.entity.FCMImage;
-import com.hjx.mgear.source.fcmoto.entity.FCMProduct;
-import com.hjx.mgear.source.fcmoto.entity.FCMSku;
+import com.hjx.mgear.platform.fcmoto.dto.FCMImage;
+import com.hjx.mgear.platform.fcmoto.dto.FCMProduct;
+import com.hjx.mgear.platform.fcmoto.dto.FCMSku;
 import com.hjx.mgear.utils.common.ImageUtils;
 import com.hjx.mgear.utils.http.AbstractHttpService;
 

@@ -1,4 +1,4 @@
-package com.hjx.mgear.source.fcmoto.entity;
+package com.hjx.mgear.platform.fcmoto.dto;
 
 /**
  * @author Jingxun Huang

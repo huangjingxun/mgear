@@ -13,6 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.hjx.mgear.platform.fcmoto.service.FCMService;
+
 /**
  * @author Jingxun Huang
  * @since 2017年4月10日

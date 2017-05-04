@@ -19,48 +19,17 @@
         <!-- <javaTypeResolver> -->
         <!-- <property name="forceBigDecimals" value="true"/> -->
         <!-- </javaTypeResolver> -->
-        <javaModelGenerator targetPackage="com.litb.autolisting.app.common.entity.db.auto" targetProject="listing-app/src/main/java"/>
-        <sqlMapGenerator targetPackage="mybatis.mapping.common.auto" targetProject="listing-app/src/main/resources"/>
-        <javaClientGenerator targetPackage="com.litb.autolisting.app.common.dao.auto" targetProject="listing-app/src/main/java" type="XMLMAPPER"/>
+        <javaModelGenerator targetPackage="com.hjx.mgear.common.db.entity.auto" targetProject="mgear/src/main/java"/>
+        <sqlMapGenerator targetPackage="mybatis.mapping.common.auto" targetProject="mgear/src/main/resources"/>
+        <javaClientGenerator targetPackage="com.hjx.mgear.common.db.dao.auto" targetProject="mgear/src/main/java" type="XMLMAPPER"/>
 
-        <!-- <table tableName="al_%"> -->
-        <!-- <generatedKey column="id" sqlStatement="JDBC" identity="true"/> -->
-        <!-- </table> -->
-        <table tableName="al_product_keyword" mapperName="ProductKeywordMapper" domainObjectName="ProductKeyword">
+        <table tableName="brand" mapperName="BrandMapper" domainObjectName="Brand">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
-        <table tableName="al_product" mapperName="ProductMapper" domainObjectName="Product">
-            <columnOverride column="condition_note" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-            <columnOverride column="search_term" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_product_langinfo" mapperName="ProductLanginfoMapper" domainObjectName="ProductLanginfo">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="description" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-            <columnOverride column="feature" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_product_override" mapperName="ProductOverrideMapper" domainObjectName="ProductOverride">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="description" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-            <columnOverride column="feature" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_product_image" mapperName="ProductImageMapper" domainObjectName="ProductImage">
+        <table tableName="brand_lang" mapperName="BrandLangMapper" domainObjectName="BrandLang">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
-        <table tableName="al_sku" mapperName="SkuMapper" domainObjectName="Sku">
-        </table>
-        <table tableName="al_sku_langinfo" mapperName="SkuLanginfoMapper" domainObjectName="SkuLanginfo">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="sku_value_json" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_sku_image" mapperName="SkuImageMapper" domainObjectName="SkuImage">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_upc" mapperName="UpcMapper" domainObjectName="Upc">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_tag_cache" mapperName="TagCacheMapper" domainObjectName="TagCache">
-        </table>
-        <table tableName="al_language" mapperName="LanguageMapper" domainObjectName="Language">
+        <table tableName="language" mapperName="LanguageMapper" domainObjectName="Language">
         </table>
     </context>
     <context id="ctx_amazon">
@@ -79,107 +48,29 @@
         <!-- <javaTypeResolver> -->
         <!-- <property name="forceBigDecimals" value="true"/> -->
         <!-- </javaTypeResolver> -->
-        <javaModelGenerator targetPackage="com.litb.autolisting.app.platform.amazon.entity.db.auto" targetProject="listing-app/src/main/java"/>
-        <sqlMapGenerator targetPackage="mybatis.mapping.amazon.auto" targetProject="listing-app/src/main/resources"/>
-        <javaClientGenerator targetPackage="com.litb.autolisting.app.platform.amazon.dao.auto" targetProject="listing-app/src/main/java" type="XMLMAPPER"/>
-        <table tableName="al_amzn_proxy" mapperName="AmznProxyMapper" domainObjectName="Proxy">
+        <javaModelGenerator targetPackage="com.hjx.mgear.platform.fcmoto.db.entity.auto" targetProject="mgear/src/main/java"/>
+        <sqlMapGenerator targetPackage="mybatis.mapping.plaform.fcmoto.auto" targetProject="mgear/src/main/resources"/>
+        <javaClientGenerator targetPackage="com.hjx.mgear.platform.fcmoto.db.dao.auto" targetProject="mgear/src/main/java" type="XMLMAPPER"/>
+        <table tableName="fcm_category" mapperName="FcmCategoryMapper" domainObjectName="FcmCategory">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
-        <table tableName="al_amzn_merchant" mapperName="AmznMerchantMapper" domainObjectName="Merchant">
-            <columnOverride column="http_image_prefix" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_amzn_category" mapperName="AmznCategoryMapper" domainObjectName="Category">
-        </table>
-        <table tableName="al_amzn_merchant_category_map" mapperName="AmznMerchantCategoryMapMapper" domainObjectName="MerchantCategoryMap">
-        </table>
-        <table tableName="al_amzn_marketplace" mapperName="AmznMarketplaceMapper" domainObjectName="Marketplace">
+        <table tableName="fcm_image" mapperName="FcmImageMapper" domainObjectName="FcmImage">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
-        <table tableName="al_amzn_listing_task" mapperName="AmznListingTaskMapper" domainObjectName="ListingTask">
+        <table tableName="fcm_product" mapperName="FcmProductMapper" domainObjectName="FcmProduct">
+            <columnOverride column="detail" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
+        </table>
+        <table tableName="fcm_product_image" mapperName="FcmProductImageMapper" domainObjectName="FcmProductImage">
+        </table>
+        <table tableName="fcm_product_lang" mapperName="FcmProductLangMapper" domainObjectName="FcmProductLang">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+            <columnOverride column="detail" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
         </table>
-        <table tableName="al_amzn_listing_log" mapperName="AmznListingLogMapper" domainObjectName="ListingLog">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+        <table tableName="fcm_sku" mapperName="FcmSkuTaskMapper" domainObjectName="FcmSku">
         </table>
-        <table tableName="al_amzn_feed" mapperName="AmznFeedMapper" domainObjectName="Feed">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="feed_file_path" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
+        <table tableName="fcm_sku_image" mapperName="FcmSkuImageMapper" domainObjectName="FcmSkuImage">
         </table>
-        <table tableName="al_amzn_feed_message" mapperName="AmznFeedMessageMapper" domainObjectName="FeedMessage">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_amzn_feed_error_message" mapperName="AmznFeedErrorMessageMapper" domainObjectName="FeedErrorMessage">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="error_description" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_amzn_amazon_variation_theme" mapperName="AmznAmazonVariationThemeMapper" domainObjectName="AmazonVariationTheme">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_amzn_amazon_variation" mapperName="AmznAmazonVariationMapper" domainObjectName="AmazonVariation">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_amzn_litb_variation" mapperName="AmznLitbVariationMapper" domainObjectName="LitbVariation">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_amzn_amazontheme_variation_map" mapperName="AmznAmazonThemeVariationMapMapper" domainObjectName="AmazonThemeVariationMap">
-        </table>
-    </context>
-    <context id="ctx_ebay">
-        <property name="javaFileEncoding" value="UTF-8"/>
-        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
-        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
-        <plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin"></plugin>
-        <commentGenerator>
-            <!-- <property name="suppressAllComments" value="true"/> -->
-            <property name="suppressDate" value="true"/>
-            <property name="addRemarkComments" value="true"/>
-        </commentGenerator>
-        <jdbcConnection connectionURL="${datasource.url}" driverClass="${datasource.driverClassName}" userId="${datasource.username}" password="${datasource.password}"/>
-        <!-- <javaTypeResolver> -->
-        <!-- <property name="forceBigDecimals" value="true"/> -->
-        <!-- </javaTypeResolver> -->
-        <javaModelGenerator targetPackage="com.litb.autolisting.app.platform.ebay.entity.db.auto" targetProject="listing-app/src/main/java"/>
-        <sqlMapGenerator targetPackage="mybatis.mapping.ebay.auto" targetProject="listing-app/src/main/resources"/>
-        <javaClientGenerator targetPackage="com.litb.autolisting.app.platform.ebay.dao.auto" targetProject="listing-app/src/main/java" type="XMLMAPPER"/>
-        <table tableName="al_ebay_merchant" mapperName="EbayMerchantMapper" domainObjectName="Merchant">
-            <columnOverride column="http_image_prefix" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_ebay_category" mapperName="EbayCategoryMapper" domainObjectName="Category">
-        </table>
-        <table tableName="al_ebay_merchant_category_map" mapperName="EbayMerchantCategoryMapMapper" domainObjectName="MerchantCategoryMap">
-        </table>
-        <table tableName="al_ebay_marketplace" mapperName="EbayMarketplaceMapper" domainObjectName="Marketplace">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_listing_task" mapperName="EbayListingTaskMapper" domainObjectName="ListingTask">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_listing_log" mapperName="EbayListingLogMapper" domainObjectName="ListingLog">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_call_error" mapperName="EbayCallErrorMapper" domainObjectName="CallError">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="error_msg" jdbcType="VARCHAR" javaType="java.lang.String"></columnOverride>
-        </table>
-        <table tableName="al_ebay_report_feedback" mapperName="EbayReportFeedbackMapper" domainObjectName="ReportFeedback">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_report_seller_standards_profile" mapperName="EbayReportSellerStandardsProfileMapper" domainObjectName="ReportSellerStandardsProfile">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_report_traffic" mapperName="EbayReportTrafficMapper" domainObjectName="ReportTraffic">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_report_daily_sale" mapperName="EbayReportDailySaleMapper" domainObjectName="ReportDailySale">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-        <table tableName="al_ebay_product" mapperName="EbayProductMapper" domainObjectName="EbayProduct">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
-
-        <table tableName="al_ebay_white_item" domainObjectName="EbayWhiteItem">
+        <table tableName="fcm_sku_lang" mapperName="FcmSkuLangMapper" domainObjectName="FcmSkuLang">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
     </context>
